@@ -134,6 +134,35 @@ int main(void)
             rotate_sticker(sticker_num, dir);
             if (sticker_num == 4) print_sticker(sticker_num);
 
+
+            for (move_x = 0; move_x < n; move_x++) {
+                for (move_y = 0; move_y < m; move_y++) {
+                    if (check_board(sticker_num)) {
+                        print_board();
+                        success = true;
+                        // cout << "success1_x(" << move_x << ")\n";
+                        break;
+                    }
+                    right_move(sticker_num);
+                }
+                if (!success) {
+                    for (int i = 0; i < move_x; i++)
+                        left_move(sticker_num);
+                }
+                else {
+                    success = false;
+                    // cout << "success1\n";
+                    break;
+                }
+
+
+
+
+            }
+
+            
+            
+            
             for (move_x = 0; move_x < m; move_x++) {
                 if (check_board(sticker_num)) {
                     print_board();
