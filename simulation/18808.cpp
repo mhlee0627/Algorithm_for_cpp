@@ -8,6 +8,17 @@ vector<pair<int, int>> sticker[100];
 pair<int, int> sticker_rc[100];
 int temp;
 
+int count_sticker() {
+    int cnt = 0;
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < m; j++) {
+            if (board[i][j] == 1) cnt++;
+        }
+    }
+
+    return cnt;
+}
+
 void print_board() {
     cout << "\n";
     for (int i = 0; i < n; i++){
@@ -27,8 +38,11 @@ void print_sticker(int i) {
 }
 
 void rotate_sticker(int sticker_num, int angle) {
+    if (angle == 0) {
+        return;
+    }
     // 90
-    if (angle == 1) {
+    else if (angle == 1) {
         for (auto& elem : sticker[sticker_num]) {
             swap(elem.first, elem.second);
             elem.second = (sticker_rc[sticker_num].first - 1) - elem.second;
@@ -38,6 +52,7 @@ void rotate_sticker(int sticker_num, int angle) {
     else if (angle == 2) {
         for (auto& elem : sticker[sticker_num]) {
             swap(elem.first, elem.second);
+            elem.second = (sticker_rc[sticker_num].first - 1) - elem.second;
         }
     }
     // 270
@@ -102,92 +117,62 @@ int main(void)
         }
     }
 
+    // print_sticker(4);
+    // rotate_sticker(4, 1);
+    // print_sticker(4);
+    // rotate_sticker(4, 2);
+    // print_sticker(4);
+    // rotate_sticker(4, 3);
+    // print_sticker(4);
+
     int move_x = 0;
     int move_y = 0;
     bool success = 0;
 
-    for (int dir = 0; dir < 4; dir++) {
-        rotate_sticker(0, dir);
-        for (move_x = 0; move_x < m; move_x++) {
-            if (check_board(0)) {
-                print_board();
-                success = true;
-                cout << "success1_x(" << move_x << ")\n";
-                break;
-            }
-            right_move(0);
-        }
-        if (!success) {
-            for (int i = 0; i < move_x; i++)
-                left_move(0);
-        }
-        else {
-            success = false;
-            cout << "success1\n";
-            break;
-        }
+    for (int sticker_num = 0; sticker_num < k; sticker_num++) {
+        for (int dir = 0; dir < 4; dir++) {
+            rotate_sticker(sticker_num, dir);
+            if (sticker_num == 4) print_sticker(sticker_num);
 
-        for (move_y = 0; move_y < n; move_y++) {
-            if (check_board(0)) {
-                print_board();
-                success = true;
-                cout << "success2_y(" << move_y << ")\n";
+            for (move_x = 0; move_x < m; move_x++) {
+                if (check_board(sticker_num)) {
+                    print_board();
+                    success = true;
+                    // cout << "success1_x(" << move_x << ")\n";
+                    break;
+                }
+                right_move(sticker_num);
+            }
+            if (!success) {
+                for (int i = 0; i < move_x; i++)
+                    left_move(sticker_num);
+            }
+            else {
+                success = false;
+                // cout << "success1\n";
                 break;
             }
-            down_move(0);
-        }
-        if (!success) {
-            for (int i = 0; i < move_x; i++)
-                up_move(0);
-        }
-        else {
-            success = false;
-            cout << "success2\n";
-            break;
+
+            for (move_y = 0; move_y < n; move_y++) {
+                if (check_board(sticker_num)) {
+                    print_board();
+                    success = true;
+                    // cout << "success2_y(" << move_y << ")\n";
+                    break;
+                }
+                down_move(sticker_num);
+            }
+            if (!success) {
+                for (int i = 0; i < move_y; i++)
+                    up_move(sticker_num);
+            }
+            else {
+                success = false;
+                // cout << "success2\n";
+                break;
+            }
         }
     }
 
-    cout << "next\n";
-
-    for (int dir = 0; dir < 4; dir++) {
-        rotate_sticker(1, dir);
-        for (move_x = 0; move_x < m; move_x++) {
-            if (check_board(1)) {
-                print_board();
-                success = true;
-                cout << "success1_x,dir(" << move_x << "|" << dir << ")\n";
-                print_sticker(1);
-                break;
-            }
-            right_move(1);
-        }
-        if (!success) {
-            for (int i = 0; i < move_x; i++)
-                left_move(1);
-        }
-        else {
-            success = false;
-            cout << "success1\n";
-            break;
-        }
-
-        for (move_y = 0; move_y < n; move_y++) {
-            if (check_board(1)) {
-                print_board();
-                success = true;
-                cout << "success1_y,dir(" << move_y << "|" << dir << ")\n";
-                break;
-            }
-            down_move(1);
-        }
-        if (!success) {
-            for (int i = 0; i < move_x; i++)
-                up_move(1);
-        }
-        else {
-            success = false;
-            cout << "success2\n";
-            break;
-        }
-    }
+    std::cout << count_sticker();
 }
