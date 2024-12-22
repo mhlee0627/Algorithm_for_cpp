@@ -52,7 +52,7 @@ void rotate_sticker(int sticker_num, int angle) {
     else if (angle == 2) {
         for (auto& elem : sticker[sticker_num]) {
             swap(elem.first, elem.second);
-            elem.second = (sticker_rc[sticker_num].first - 1) - elem.second;
+            elem.second = (sticker_rc[sticker_num].second - 1) - elem.second;
         }
     }
     // 270
@@ -64,38 +64,14 @@ void rotate_sticker(int sticker_num, int angle) {
     }
 }
 
-void right_move(int sticker_num) {
-    for (auto& elem : sticker[sticker_num]) {
-        elem.second++;
-    }
-}
-
-void left_move(int sticker_num) {
-    for (auto& elem : sticker[sticker_num]) {
-        elem.second--;
-    }
-}
-
-void down_move(int sticker_num) {
-    for (auto& elem : sticker[sticker_num]) {
-        elem.first++;
-    }
-}
-
-void up_move(int sticker_num) {
-    for (auto& elem : sticker[sticker_num]) {
-        elem.first--;
-    }
-}
-
-bool check_board(int sticker_num) {
+bool check_board(int sticker_num, int x, int y) {
     for (auto elem : sticker[sticker_num]) {
-        if (elem.first < 0 || elem.first >= n || elem.second < 0 || elem.second >= m) return 0;
-        if (board[elem.first][elem.second] == 1) return 0;
+        if ((elem.first + x) < 0 || (elem.first + x) >= n || (elem.second + y) < 0 || (elem.second + y) >= m) return 0;
+        if (board[elem.first + x][elem.second + y] == 1) return 0;
     }
     
     for (auto elem : sticker[sticker_num]) {
-        board[elem.first][elem.second] = 1;
+        board[elem.first + x][elem.second + y] = 1;
     }
     return 1;
 }
@@ -117,13 +93,13 @@ int main(void)
         }
     }
 
-    // print_sticker(4);
-    // rotate_sticker(4, 1);
-    // print_sticker(4);
-    // rotate_sticker(4, 2);
-    // print_sticker(4);
-    // rotate_sticker(4, 3);
-    // print_sticker(4);
+    // print_sticker(2);
+    // rotate_sticker(2, 1);
+    // print_sticker(2);
+    // rotate_sticker(2, 2);
+    // print_sticker(2);
+    // rotate_sticker(2, 3);
+    // print_sticker(2);
 
     int move_x = 0;
     int move_y = 0;
@@ -132,72 +108,20 @@ int main(void)
     for (int sticker_num = 0; sticker_num < k; sticker_num++) {
         for (int dir = 0; dir < 4; dir++) {
             rotate_sticker(sticker_num, dir);
-            if (sticker_num == 4) print_sticker(sticker_num);
-
-
             for (move_x = 0; move_x < n; move_x++) {
                 for (move_y = 0; move_y < m; move_y++) {
-                    if (check_board(sticker_num)) {
-                        print_board();
+                    if (check_board(sticker_num, move_x, move_y)) {
+                        // print_board();
                         success = true;
-                        // cout << "success1_x(" << move_x << ")\n";
                         break;
                     }
-                    right_move(sticker_num);
                 }
-                if (!success) {
-                    for (int i = 0; i < move_x; i++)
-                        left_move(sticker_num);
-                }
-                else {
-                    success = false;
-                    // cout << "success1\n";
+                if (success) {
                     break;
                 }
-
-
-
-
             }
-
-            
-            
-            
-            for (move_x = 0; move_x < m; move_x++) {
-                if (check_board(sticker_num)) {
-                    print_board();
-                    success = true;
-                    // cout << "success1_x(" << move_x << ")\n";
-                    break;
-                }
-                right_move(sticker_num);
-            }
-            if (!success) {
-                for (int i = 0; i < move_x; i++)
-                    left_move(sticker_num);
-            }
-            else {
+            if (success) {
                 success = false;
-                // cout << "success1\n";
-                break;
-            }
-
-            for (move_y = 0; move_y < n; move_y++) {
-                if (check_board(sticker_num)) {
-                    print_board();
-                    success = true;
-                    // cout << "success2_y(" << move_y << ")\n";
-                    break;
-                }
-                down_move(sticker_num);
-            }
-            if (!success) {
-                for (int i = 0; i < move_y; i++)
-                    up_move(sticker_num);
-            }
-            else {
-                success = false;
-                // cout << "success2\n";
                 break;
             }
         }
