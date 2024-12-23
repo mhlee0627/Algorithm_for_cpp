@@ -2,9 +2,9 @@
 using namespace std;
 
 int n, m;
-int board[32768][32768];
+// int board[32768][32768];
 
-void print_board() {
+void print_board(int** board) {
     cout << "\n";
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -17,7 +17,7 @@ void print_board() {
     }
 }
 
-void func(int w) {
+void func(int w, int** board) {
     if (w == (n*2)) return;
     // up 
     int halfw = w/2;
@@ -50,7 +50,7 @@ void func(int w) {
     }
 
     // cout << "debug: " << w << "\n";
-    func((w * 2));
+    func((w * 2), board);
 }
 
 int main(void)
@@ -60,13 +60,18 @@ int main(void)
 
     cin >> n >> m;
 
+    int** board = new int*[1<<15];
+    for (int i = 0; i < (1<<15); ++i) {
+        board[i] = new int[(1<<15)];
+    }
+
     board[0][0] = 1;
     board[1][0] = 2;
     board[1][1] = 3;
     board[0][1] = 4;
 
-    func(2);
-    // print_board();
+    func(2, board);
+    // print_board(board);
 
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
