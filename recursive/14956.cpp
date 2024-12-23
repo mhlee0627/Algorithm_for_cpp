@@ -2,54 +2,55 @@
 using namespace std;
 
 int n, m;
-int board[15][15];
+int board[32768][32768];
 
 void print_board() {
     cout << "\n";
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
+            if (board[i][j] < 10){
+                cout << " ";
+            }
             cout << board[i][j] << " ";
         }
         cout << "\n";
     }
 }
 
-void func(int x, int y, int w) {
+void func(int w) {
+    if (w == (n*2)) return;
     // up 
-    for (int i = x; i < x + w; i++) {
-        for (int j = y; j < y + w; j++) {
-            board[x+w][y] = board[x][y] + w;
+    int halfw = w/2;
+    for (int i = 0; i < halfw; i++) {
+        for (int j = 0; j < halfw; j++) {
+            board[i+halfw][j] = board[i][j] + pow(halfw, 2);
         }
     }
 
     // up and right
-    for (int i = 0; i < w; i++) {
-        for (int j = 0; j < w; j++) {
-            board[i+w][j+w] += (2*w);
+    for (int i = 0; i < halfw; i++) {
+        for (int j = 0; j < halfw; j++) {
+            board[i+halfw][j+halfw] =  board[i][j] + (2 * pow(halfw, 2));
         }
     }
 
     // no step
-    for (int i = 0; i < w; i++) {
-        for (int j = 0; j < w; j++) {
+    for (int i = 0; i < halfw; i++) {
+        for (int j = 0; j < halfw; j++) {
             if (i == j || i > j) continue;
             swap(board[i][j], board[j][i]);
         }
     }
     
     // right
-    // for (int i = x; i < w; i++) {
-    //     for (int j = y; j < w; j++) {
-    //         board[i][j+w] = board[i][j];
-    //     }
-    // }
-    // for (int i = x; i < w; i++) {
-    //     for (int j = y; j < w; j++) {
-    //         if (j > i) continue;
-    //         swap(board[i][j], board[w-i][j]);
-    //     }
-    // }
+    for (int i = 0; i < halfw; i++) {
+        for (int j = 0; j < halfw; j++) {
+            board[i][j+halfw] = board[halfw-1-i][halfw-1-j] + (3 * pow(halfw, 2));
+        }
+    }
 
+    // cout << "debug: " << w << "\n";
+    func((w * 2));
 }
 
 int main(void)
@@ -64,6 +65,14 @@ int main(void)
     board[1][1] = 3;
     board[0][1] = 4;
 
-    func(0, 0, 2);
-    print_board();
+    func(2);
+    // print_board();
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (board[i][j] == m) {
+                cout << j+1 << " " << i+1;
+            }
+        }
+    }
 }
