@@ -22,37 +22,35 @@ int main(void)
     int sum = 0;
     int cnt = 1;
     que.push(arr[0]);
-    cout << "push-> que size: " << que.size() << "\n";
     que.pop();
-    cout << "pop-> que size: " << que.size() << "\n";
     sum += arr[0];
-    cout << "sum: " << sum << "\n";
 
-    for (int i = 1; i < n; i++) {
-        int cur_sum = sum + arr[i];
+    int arr_idx = 1;
+    while (!que.empty()) {
+        // cout << "(cnt: " << cnt << "| arr_idx: " << arr_idx << ")\n";
+
+        if (arr_idx == n) {
+            que.pop();
+            cnt++;
+            // cout << "dum pop(cnt: " << cnt << ")\n";
+            continue;
+        }
+
+        int cur_sum = sum - que.front() + arr[arr_idx];
+        
         if (cur_sum <= l) {
-            cout << "if(i: " << i << ")\n";
-            que.push(arr[i]);
+            // cout << "if(i: " << arr_idx << ")\n";
+            que.push(arr[arr_idx]);
             sum -= que.front();
             que.pop();
-            sum += arr[i];
+            sum += arr[arr_idx++];
             cnt++;
         }
         else {
-            cout << "else(i: " << i << ")\n";
-            while(1) {
-                sum -= que.front();
-                que.pop();
-                que.push(0);
-                cnt++;
-                int cur_sum = sum + arr[i];
-                if (cur_sum <= l) break;
-            }
-
-            que.push(arr[i]);
+            // cout << "else(i: " << arr_idx << ")\n";
+            que.push(0);
             sum -= que.front();
             que.pop();
-            sum += arr[i];
             cnt++;
         }
     }
