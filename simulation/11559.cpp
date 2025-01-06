@@ -1,17 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+int cnt;
 string board[12];
 int dist[12][6];
 int dirX[4] = {1, 0, -1, 0};
 int dirY[4] = {0, 1, 0, -1};
 stack<pair<int, int>> s;
 vector<pair<int, int>> delete_block;
-
-void find_delete_block(int x, int y, char color) {
-    stack<pair<int, int>> t_s;
-
-}
 
 void dfs(int x, int y, char color) {
     vector<pair<int, int>> temp_vec;
@@ -59,7 +55,7 @@ void print_dist() {
 void print_board() {
     for (int i = 0; i < 12; i++) {
         for (int j = 0; j < 6; j++) {
-            cout << board[i][j] << " ";
+            cout << board[i][j];
         }
         cout << "\n";
     }
@@ -99,7 +95,20 @@ void line_arrange() {
                     done = 0;
                 }
             }
-            if (recheck) break;
+            if (recheck) {
+                recheck = 0;
+                break;
+            }
+        }
+    }
+}
+
+void do_dfs() {
+    for (int i = 0; i < 12; i++) {
+        for (int j = 0; j < 6; j++) {
+            if (dist[i][j] > -1) continue;
+            if (board[i][j] == '.') continue;
+            dfs(i, j, board[i][j]);
         }
     }
 }
@@ -114,15 +123,7 @@ int main(void)
     }
 
     clear_dist();
-
-    for (int i = 0; i < 12; i++) {
-        for (int j = 0; j < 6; j++) {
-            if (dist[i][j] > -1) continue;
-            if (board[i][j] == '.') continue;
-            dfs(i, j, board[i][j]);
-        }
-    }
-
+    do_dfs();
     print_dist();
 
     cout << "delete block: \n";
@@ -130,9 +131,21 @@ int main(void)
         cout << elem.first << ", " << elem.second << "\n";
     }
 
-    apply_delete_block_to_board();
+    while (delete_block.size() != 0) {
+        cnt++;
+        apply_delete_block_to_board();
+        line_arrange();
+        print_board(); 
+        delete_block.clear();
 
-    print_board();
-    line_arrange();
-    print_board();
+        clear_dist();
+        do_dfs();
+    }
+
+    // apply_delete_block_to_board();
+    // print_board();
+    // line_arrange();
+    // print_board();
+    
+    cout << "cnt: " << cnt;
 }
