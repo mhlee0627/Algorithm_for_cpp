@@ -25,12 +25,10 @@ void dfs(int x, int y, char color) {
             s.push({nx, ny});
             temp_vec.push_back({nx, ny});
             dist[nx][ny] = dist[curPos.first][curPos.second] + 1;
-            break;
         }
     }
 
     if (temp_vec.size() >= 4) {
-        // cout << "4 cnt over\n";
         for (auto elem : temp_vec) {
             delete_block.push_back(elem);
         }
@@ -91,7 +89,6 @@ void line_arrange() {
                 }
 
                 if (i == 0 && j == 5) {
-                    cout << "done\n";
                     done = 0;
                 }
             }
@@ -124,28 +121,23 @@ int main(void)
 
     clear_dist();
     do_dfs();
-    print_dist();
+    // print_dist();
 
-    cout << "delete block: \n";
-    for (const auto& elem : delete_block) {
-        cout << elem.first << ", " << elem.second << "\n";
-    }
+    // cout << "delete block: \n";
+    // for (const auto& elem : delete_block) {
+    //     cout << elem.first << ", " << elem.second << "\n";
+    // }
 
     while (delete_block.size() != 0) {
         cnt++;
         apply_delete_block_to_board();
         line_arrange();
-        print_board(); 
+        // print_board(); 
         delete_block.clear();
 
         clear_dist();
         do_dfs();
     }
 
-    // apply_delete_block_to_board();
-    // print_board();
-    // line_arrange();
-    // print_board();
-    
-    cout << "cnt: " << cnt;
+    cout << cnt;
 }
