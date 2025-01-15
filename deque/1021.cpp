@@ -30,6 +30,16 @@ int get_right_dist(int k) {
             return i;
         }
     }
+    return 0;
+}
+
+int get_left_dist(int k) {
+    for (int i = 1; i < dq.size(); i++) {
+        if (arr[k] == dq[dq.size() - i]) {
+            return i;
+        }
+    }
+    return 0;
 }
 
 int main(void)
@@ -51,9 +61,23 @@ int main(void)
             first_action();
         }
         else {
+            int rd = get_right_dist(i);
+            int ld = get_left_dist(i);
             
+            if (rd >= ld) {
+                while(ld--) third_action();
+                if (arr[i] == dq.front()) {
+                    first_action();
+                }
+            }
+            else {
+                while(rd--) second_action();
+                if (arr[i] == dq.front()) {
+                    first_action();
+                }
+            }
         }
     }
 
-    cout << cnt;
+    cout << cnt << "\n";
 }
