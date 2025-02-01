@@ -2,18 +2,40 @@
 using namespace std;
 
 int l, c;
-vector<char> vowel;
-vector<char> cons;
+char input[15];
+bool isUsed[15];
 char ret[15];
 
-// positin backtracking
-int p_ret[15];
+bool check() {
+    bool vowel = false;
+    int cons_cnt = 0;
 
+    for (int i = 0; i < l; i++) {
+        if (ret[i] == 'a' || ret[i] == 'e' || ret[i] == 'i' || ret[i] == 'o' || ret[i] == 'u') vowel = true;
+        else {
+            cons_cnt++;
+        }
+    }
+    return vowel && (cons_cnt >= 2);
+}
 
-void func(int k) {
+void func(int r, int k) {
     if (k == l) {
-        for (int i = 0; i < k; i) {
-            
+        if (check()) {
+            for (int i = 0; i < k; i++) {
+                cout << ret[i];
+            }
+            cout << '\n';
+        }
+        return;
+    }
+
+    for (int i = r; i < c; i++) {
+        if (!isUsed[i]) {
+            ret[k] = input[i];
+            isUsed[i] = true;
+            func(i, k+1);
+            isUsed[i] = false;
         }
     }
 }
@@ -27,15 +49,10 @@ int main(void)
     char temp;
     cin >> l >> c;
     for (int i = 0; i < c; i++) {
-        cin >> temp;
-        if (temp == 'a' || temp == 'e' || temp == 'i' || temp == 'o' || temp == 'u')
-            vowel.push_back(temp);
-        else
-            cons.push_back(temp);
+        cin >> input[i];
     }
 
+    sort(input, input+c);
 
-
-    
-
+    func(0, 0);
 }
