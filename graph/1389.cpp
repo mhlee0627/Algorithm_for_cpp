@@ -53,18 +53,7 @@ int main(void)
 		ret.push_back({get_dist_sum(), i});
 	}
 
-	sort(ret.begin(), ret.end());
+	stable_sort(ret.begin(), ret.end());
 
 	cout << ret[0].second << '\n';
-
-	//vector<int> ret_num;
-	//ret_num.push_back(ret[0].second);
-	//int min_v = ret[0].first;
-	//for (int i = 1; i <= n; i++) {
-	//	if (min_v < ret[i].first) break;
-	//	ret_num.push_back(ret[i].second);
-	//}	
-
-	//sort(ret_num.begin(), ret_num.end());
-	//cout << ret_num[0] << '\n';
 }
