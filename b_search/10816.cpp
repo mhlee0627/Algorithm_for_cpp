@@ -4,6 +4,30 @@ using namespace std;
 int n, m;
 vector<int> vec;
 
+int getloweridx(int target, int len) {
+	int st = 0;
+	int en = len;
+	while (st < en) {
+		int mid = (st+en)/2;
+		if (vec[mid] >= target) en = mid;
+		else st = mid+1;
+	}
+
+	return st;
+}
+
+int getuperidx(int target, int len) {
+	int st = 0;
+	int en = len;
+	while (st < en) {
+		int mid = (st+en)/2;
+		if (vec[mid] > target) en = mid;
+		else st = mid+1;
+	}
+
+	return st;
+}
+
 int main(void)
 {
 	ios::sync_with_stdio(0);
@@ -11,7 +35,7 @@ int main(void)
 
 	cin >> n;
 	int tmp = 0;
-	while (n--) {
+	for (int i = 0; i < n; i++) {
 		cin >> tmp;
 		vec.push_back(tmp);
 	}
@@ -21,11 +45,8 @@ int main(void)
 	cin >> m;
 	while (m--) {
 		cin >> tmp;
-		int cnt = 0;
-		while (binary_search(vec.begin(), vec.end(), tmp)) {
-			cnt++;
-		}
-
-		cout << binary_search(vec.begin(), vec.end(), tmp) << '\n';
+	
+		cout << getuperidx(tmp, n) - getloweridx(tmp, n) << ' ';
 	}
+	cout << '\n';
 }
