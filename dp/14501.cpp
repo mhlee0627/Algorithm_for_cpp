@@ -2,29 +2,28 @@
 using namespace std;
 
 int n;
-pair<int, int> ta[16];
-int d[30];
-int rtime;
+int t[1500005];
+int p[1500005];
+int d[1500005];
 
 int main(void)
 {
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    cin >> n;
-    for (int i = 1; i <= n; i++) {
-        cin >> ta[i].first >> ta[i].second;
-    }
-
-	rtime = 1;
-	int ans = 0;
-	for (int j = n; j > 0; j--) {
-		if (rtime >= ta[j].first) {
-			ans += ta[j].second;
-			rtime = rtime - ta[j].first;
-		}
-		rtime++;
+	cin >> n;
+	for (int i = 1; i <= n; i++) {
+		cin >> t[i] >> p[i];
 	}
 
-	cout << ans << '\n';
+	for (int i = n; i >= 1; i--) {
+		if (t[i] > n-i+1) {
+			d[i] = d[i+1];
+		}
+		else {
+			d[i] = max(d[i + 1], p[i] + d[i + t[i]]);
+		}
+	}
+
+	cout << *max_element(d, d+n+1);
 }
