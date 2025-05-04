@@ -101,21 +101,29 @@ int main(void)
             }
         }
 
-        if (iland_cnt >= 2) {
+		if (iland_cnt == 0) {
+			year = 0;
+			break;
+		}
+        else if (iland_cnt >= 2) {
             // cout << "iland spilt\n";
             break;
         }
         else {
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m; j++) {
-                    later_1year(i, j);
+					if (board[i][j] > 0) {
+						later_1year(i, j);
+					}
                 }
             }
 
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < m; j++) {
-                    board[i][j] -= down_iland[i][j];
-                    if (board[i][j] < 0) board[i][j] = 0;
+					if (board[i][j] > 0) {
+	                    board[i][j] -= down_iland[i][j];
+	                    if (board[i][j] < 0) board[i][j] = 0;
+					}
                 }
             }
 
