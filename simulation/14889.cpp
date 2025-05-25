@@ -2,99 +2,83 @@
 using namespace std;
 
 int n;
-int m;
-int board[21][21];
-int a[11];
-bool isUsed[21];
-int sum;
-vector<int> sum_vec;
+int board[25][25];
+bool vis[25];
+int arr[25];
+bool check[25];
+int minv = 0x7fffffff;
 
-int aa[2];
-bool isUsed2[21];
-
-void bt2(int k) {
-	if (k == 2) {
-		for (int i = 0; i < 2; i++) {
-			cout << aa[i] << ' ';
-		}
-		cout << '\n';
-
-		sum += board[aa[0]-1][aa[1]-1];
-
-		return;
-	}
-
-	for (int i = 0; i < m; i++) {
-		if (!isUsed2[i]) {
-			aa[k] = a[i];
-			isUsed2[i] = true;
-			bt2(k+1);
-			isUsed2[i] = false;
-		}
-	}
+void initCheck() {
+    for (int i = 0; i < 25; i++) check[i] = 0;
 }
 
-void func() {
-	//cout << "bt2===\n";
-	bt2(0);
-	//cout << "sum: " << sum << '\n';
-	sum_vec.push_back(sum);
-	sum = 0;
+int cal() {
+    vector<int> t1;
+    vector<int> t2;
+    int sum1 = 0;
+    int sum2 = 0;
 
-	//cout << "===bt2\n";
+    for (int i = 1; i <= n; i++) {
+        if (check[i]) {
+            t1.push_back(i);
+        }
+        else {
+            t2.push_back(i);
+        }
+    }
+
+    for (auto i : t1) {
+        for (auto j : t1) {
+            if (i != j) {
+                sum1 += board[i][j];
+            }
+        }
+    }
+
+    for (auto i : t2) {
+        for (auto j : t2) {
+            if (i != j) {
+                sum2 += board[i][j];
+            }
+        }
+    }
+
+    return abs(sum1 - sum2);
 }
 
-void bt(int r, int k) {
-	if (k == m) {
-		//for (int i = 0; i < m; i++) {
-		//	cout << a[i] << ' ';
-		//}
-		//cout << '\n';
-		
-		func();
+void func(int k, int x) {
+    if (k == n/2) {
+        initCheck();
+        for (int i = 0; i < k; i++) check[arr[i]] = true;
 
-		return;
-	}
+        minv = min(minv, cal());
 
-	for (int i = r; i <= n; i++) {
-		if (!isUsed[i]) {
-			isUsed[i] = true;
-			a[k] = i;
-			bt(i+1, k+1);
-			isUsed[i] = false;
-		}
-	}
+        return;
+    }
+
+    for (int i = x; i <= n; i++) {
+        if (!vis[i]) {
+            vis[i] = true;
+            arr[k] = i;
+            func(k+1, i);
+            vis[i] = false;
+        }
+    }
 }
 
 int main(void)
 {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
+    ios::sync_with_stdio(0);
+    cin.tie(0);
 
-	cin >> n;
-	m = n/2;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			cin >> board[i][j];
-		}
-	}
+    cin >> n;
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cin >> board[i][j];
+        }
+    }
 
-	bt(1, 0);
-	
-	int min_val = 2000;
+    func(0, 1);
 
-	int size = sum_vec.size()/2;
-	if (size%2 != 0) size--;
-
-	for (int i = 0; i < size; i++) {
-		int val = abs(sum_vec[i] - sum_vec[size-i-1]);
-		//cout << "i: " << i << ", val: " << val << '\n';
-		min_val = min(val, min_val);
-
-	}
-
-	cout << min_val << '\n';
-
-
-
+    cout << minv << '\n';
 }
