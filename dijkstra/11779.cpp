@@ -60,8 +60,9 @@ int main(void)
 
     cout << vec.size() << '\n';
 
-    for (int i = vec.size()-1; i >= 0; i--) {
-        cout << vec[i] << ' ';
+    reverse(vec.begin(), vec.end());
+    for (auto elem : vec) {
+        cout << elem << ' ';
     }
     cout << '\n';
 }
