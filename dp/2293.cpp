@@ -1,34 +1,26 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int t, n, m;
-int coin[25];
-uint32_t dp[25][10005];
+int n, k;
+int c[105];
+int d[10005];
 
 int main(void)
 {
     ios::sync_with_stdio(0);
     cin.tie(0);
 
-    cin >> t;
-    while (t--) {
-        cin >> n;
-        for (int i = 1; i <= n; i++) cin >> coin[i];
-        cin >> m;
+    cin >> n >> k;
+    for (int i = 0; i < n; i++) cin >> c[i];
 
-        for (int i = 1; i <= n; i++) dp[i][0] = 1;
-
-        for (int c = 1; c <= n; c++) {
-            for (int k = 1; k <= m; k++) {
-                if (k >= coin[c]) {
-                    dp[c][k] = dp[c][k - coin[c]] + dp[c-1][k];
-                }
-                else {
-                    dp[c][k] = dp[c-1][k];
-                }
+    d[0] = 1;
+    for (int i = 0; i < n; i++) {
+        for (int j = 1; j <= k; j++) {
+            if (j >= c[i]) {
+                d[j] += d[j - c[i]];
             }
         }
-
-        cout << dp[n][m] << '\n';
     }
+
+    cout << d[k] << '\n';
 }
