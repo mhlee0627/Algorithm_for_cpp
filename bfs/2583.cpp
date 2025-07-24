@@ -4,76 +4,84 @@ using namespace std;
 #define X first
 #define Y second
 
-queue<pair<int, int>> q;
+int m, n, k;
+bool board[105][105];
+bool vis[105][105];
+
 int dirX[4] = {1, 0, -1, 0};
 int dirY[4] = {0, 1, 0, -1};
 
-int n, m, k;
-bool board[101][101];
-bool visit[101][101];
+int bfs(int x, int y) {
+	int ret = 0;
+	queue<pair<int, int>> q;
+	q.push({x, y});
+	ret++;
+	vis[x][y] = true;
 
-pair<int, int> lefttop;
-pair<int, int> rightbot;
-int cnt;
-vector<int> space_list;
+	while (!q.empty()) {
+		auto cur = q.front();
+		q.pop();
 
-void check_board() {
-    for (int i = lefttop.X; i < rightbot.X; i++) {
-        for (int j = lefttop.Y; j < rightbot.Y; j++) {
-            board[i][j] = 1;
-        }
-    }
+		for (int i = 0; i < 4; i++) {
+			int nx = dirX[i] + cur.X;
+			int ny = dirY[i] + cur.Y;
+			if (nx < 0 || nx >= m || ny < 0 || ny >= n) continue;
+			if (vis[nx][ny] || board[nx][ny]) continue;
+
+			q.push({nx, ny});
+			ret++;
+			vis[nx][ny] = true;
+		}
+	}
+
+	return ret;
 }
 
-void print_board() {
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            cout << board[i][j];
-        }
-        cout << "\n";
-    }
-    cout << "\n";
+void func(int sx, int sy, int ex, int ey) {
+	for (int x = sx; x < ex; x++) {
+		for (int y = sy; y < ey; y++) {
+			board[x][y] = true;
+		}
+	}
+}
+
+void print_brd() {
+	cout << "print brd" << endl;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << board[i][j] << ' ';
+		}
+		cout << '\n';
+	}
+	cout << '\n';
 }
 
 int main(void)
-{
-    ios::sync_with_stdio(0);
-    cin.tie(0);
+{	
+	ios::sync_with_stdio(0);
+	cin.tie(0);
 
-    cin >> m >> n >> k;
-    for (int i = 0; i < k; i++) {
-        cin >> lefttop.X >> lefttop.Y >> rightbot.X >> rightbot.Y;
-        check_board();
-        // print_board();
-    }
+	cin >> m >> n >> k;
+	for (int i = 0; i < k; i++) {
+		int x1, y1, x2, y2;
+		cin >> y1 >> x1 >> y2 >> x2;
 
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < m; j++) {
-            if (board[i][j] == 0 && visit[i][j] == 0) {
-                q.push({i, j});
-                visit[i][j] = 1;
-                while (!q.empty()) {
-                    pair<int, int> curPos = q.front();
-                    q.pop();
-                    for (int i = 0; i < 4; i++) {
-                        int nx = curPos.X + dirX[i];
-                        int ny = curPos.Y + dirY[i];
-                        if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
-                        if (board[nx][ny] == 1 || visit[nx][ny] > 0) continue;
-                        q.push({nx, ny});
-                        visit[nx][ny] = 1;
-                    }
-                    cnt++;
-                }
-                space_list.push_back(cnt);
-                cnt = 0;
-            }
-        }
-    }
+		func(x1, y1, x2, y2);
+	}
 
-    cout << space_list.size() << "\n";
-    sort(space_list.begin(), space_list.end());
-    for (auto elem : space_list) {
-        cout << elem << " ";
-    }
+	vector<int> vec;
+
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			if (board[i][j] || vis[i][j]) continue;
+
+			vec.push_back(bfs(i, j));
+		}
+	}
+
+	sort(vec.begin(), vec.end());
+
+	cout << vec.size() << '\n';
+	for (auto elem : vec) cout << elem << ' ';
+	cout << '\n';
 }
